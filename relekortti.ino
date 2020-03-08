@@ -5,7 +5,7 @@ char* wifi_name = "****"; // Your Wifi network name here
 char* wifi_pass = "****";    // Your Wifi network password here
 */
 
-const int JokuRele = 2;
+const int Buttoni = 2;
 
 WiFiServer server(80);    // Server will be at port 80
 
@@ -18,7 +18,7 @@ void rele(int rele, int paalla)
 
 void setup()
 {
-  pinMode(JokuRele, INPUT);
+  pinMode(Buttoni, INPUT);
   Serial.begin (115200);
   WiFi.begin (wifi_name, wifi_pass);     // Connecting to the wifi network
   while (WiFi.status() != WL_CONNECTED) {
@@ -35,17 +35,17 @@ int suunta = DONTKNOW ;
 
 void loop() 
 {
-  /*  if (digitalRead(JokuRele)==LOW) {
+  /*  if (digitalRead(Buttoni)==LOW) {
     if (suunta==UP)   { rele(1,0); rele(2,1); delay(100); rele(1,0); rele(2,0); suunta=DONTKNOW; }
     if (suunta==DOWN) { rele(1,1); rele(2,0); delay(100); rele(1,0); rele(2,0); suunta=DONTKNOW; }
     if (suunta==DONTKNOW) { rele(1,0); rele(2,0); delay(1000); } } */
-  if (digitalRead(JokuRele)==LOW) {
+  if (digitalRead(Buttoni)==LOW) {
     int loc=0; int hic=0; int nummer=0;
     while (hic<50) {
-      while (digitalRead(JokuRele)==LOW) { delay(10); ++loc; hic=0;}
+      while (digitalRead(Buttoni)==LOW) { delay(10); ++loc; hic=0;}
       if (loc > 100) { nummer=5; }
       else if (loc > 3) { loc=0; ++nummer;}
-      if (digitalRead(JokuRele)==HIGH) { delay(10); ++hic; }
+      if (digitalRead(Buttoni)==HIGH) { delay(10); ++hic; }
     }
     if (4<nummer) {rele(1,0);rele(2,0);rele(3,0);rele(4,0); }
     else if (0<nummer) { rele(nummer,1); }
