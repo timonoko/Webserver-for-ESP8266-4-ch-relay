@@ -9,12 +9,23 @@ const int Buttoni = 2;
 
 WiFiServer server(80);    // Server will be at port 80
 
-void rele(int rele, int paalla)
+int releet[5] = {0,0,0,0,0};
+
+void rele2(int rele, int paalla)
 {  Serial.write(0xA0);
   Serial.write(rele);
   Serial.write(paalla);
   Serial.write(0xA0+rele+paalla);
-  delay(200);}
+  delay(50);}
+
+void rele(int rele, int paalla)
+{ releet[rele]=paalla;
+  rele2(rele,paalla); }
+
+void rpaivitys()
+{  for (int r=1;r<5;++r) {
+    rele2(r,releet[r]); }
+}
 
 void setup()
 {
@@ -66,20 +77,22 @@ void loop()
 	  client.println("<!DOCTYPE html><html>");
  /*          client.println("HTTP/1.1 200 OK");
           client.println("Content-Type: text/html"); */
+	  client.println("<!DOCTYPE html><html>");
 	  client.println("<head><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">");
-	  client.println("<link rel=\"icon\" href=\"data:,\"></head>");
+	  client.println("<link rel=\"icon\" href=\"data:,\">");
+	  client.println("<style>html { font-family: Helvetica; display: inline-block; margin: 0px auto; text-align: center;}");
+	  client.println(".button { background-color: #f3db3b; border: 30 ; color: black; padding: 16px 40px;");
+	  client.println("text-decoration: none; font-size: 50px; margin: 2px; cursor: pointer;}");
+	  client.println(".button2 {background-color: #ff3425;}</style></head>");
 
           client.print("<HTML><title>4 relay</title>");
           client.print("<center>");
-          client.print("<body><h1>Relay Control</h1>");
-          client.print("<a href=\"/r1on\"\"> R1 <button>ON</button></a>");
-          client.print("<a href=\"/r1off\"\"> <button>OFF</button></a> <p>");
-          client.print("<a href=\"/r2on\"\"> R2 <button>ON</button></a>");
-          client.print("<a href=\"/r2off\"\"> <button>OFF</button></a> <p>");
-          client.print("<a href=\"/r3on\"\"> R3 <button>ON</button></a>");
-          client.print("<a href=\"/r3off\"\"> <button>OFF</button></a> <p>");
-          client.print("<a href=\"/r4on\"\"> R4 <button>ON</button></a>");
-          client.print("<a href=\"/r4off\"\"> <button>OFF</button></a> <p>");
+          client.print("<body><h1>Releet</h1>");
+	  for (int r=1;r<5;++r) {
+	    if (releet[r]==0) {
+              client.println("<p><a href=\"/r"+String(r)+"on\"><button class=\"button\">"+String(r)+"</button></a></p>");}
+	    else {
+              client.println("<p><a href=\"/r"+String(r)+"off\"><button class=\"button button2\">"+String(r)+"</button></a></p>"); } }
           client.print("<a href=\"/rKon\"\"> R* <button>ON</button></a>");
           client.print("<a href=\"/rKoff\"\"> <button>OFF</button></a> <p> <p>");
 	  /*         client.print("<a href=\"/up\"\"> SERVO <button>UP</button></a> ");
@@ -107,7 +120,8 @@ void loop()
 	    if(buffer.indexOf("GET /r4off")>=0) rele(4,0);
 	    if(buffer.indexOf("GET /rKon")>=0) { rele(1,1); rele(2,1); rele(3,1); rele(4,1); }
 	    if(buffer.indexOf("GET /rKoff")>=0) { rele(1,0); rele(2,0); rele(3,0); rele(4,0); }
-        }
+	    if(buffer.indexOf("GET /r")>=0) {rpaivitys();}
+	  }
         else {
           currentLineIsBlank = false;
         }  
