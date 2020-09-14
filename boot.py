@@ -28,10 +28,6 @@ import uos, machine
 def ls():
     print(os.listdir())
 
-#from machine import Pin
-#BUTTON=Pin(0, Pin.IN)
-#print("BUTTON="+str(BUTTON.value()))
-
 import webrepl
 webrepl.start()
 
