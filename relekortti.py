@@ -1,5 +1,5 @@
 
-print('toimiiko')
+print('Testing testing')
 
 try:
   import usocket as socket
