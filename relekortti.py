@@ -5,7 +5,6 @@ try:
   import usocket as socket
 except:
   import socket
-
 import network,time
 
 # print prints only to Python client
@@ -47,24 +46,62 @@ def web_page():
    </html>"""
   return html
 
+from machine import Pin
+
+BUTTON=Pin(2, Pin.IN)  
+HI=1
+LO=0
+
+def buttoni():
+    if BUTTON.value()==LO:
+        loc=0
+        hic=0
+        nummer=0
+        while hic<50:
+            while BUTTON.value()==LO:
+                time.sleep(0.010)
+                loc=loc+1
+                hic=0
+            if loc > 100:
+                nummer=5
+            elif loc > 3:
+                loc=0
+                nummer=nummer+1
+            time.sleep(0.010)
+            hic=hic+1 
+        print('BUTTON BOUNC %i %i'%(nummer,loc))
+        if 4<nummer:
+            rele(1,0)
+            rele(2,0)
+            rele(3,0)
+            rele(4,0)
+        elif 0<nummer:
+            rele(nummer,1)
+
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.bind(('', 80))
 s.listen(5)
 
 while True:
-  conn, addr = s.accept()
-  request = conn.recv(1024)
-  request = str(request)
-  for r in range(1,5):
-    if request.find('/r'+str(r)+'on') == 6: rele(r,1)
-    if request.find('/r'+str(r)+'off') == 6: rele(r,0)
-  if request.find('/r5on') == 6:
-      for x in range(1,5): rele(x,1)
-  if request.find('/r5off') == 6:
-      for x in range(1,5): rele(x,0)
-  response = web_page()
-  conn.send('HTTP/1.1 200 OK\n')
-  conn.send('Content-Type: text/html\n')
-  conn.send('Connection: close\n\n')
-  conn.sendall(response)
-  conn.close()
+    buttoni()
+    s.settimeout(0.2)
+    try:
+        conn, addr = s.accept()
+        request = conn.recv(1024)
+        request = str(request)
+        for r in range(1,5):
+            if request.find('/r'+str(r)+'on') == 6: rele(r,1)
+            if request.find('/r'+str(r)+'off') == 6: rele(r,0)
+        if request.find('/r5on') == 6:
+            for x in range(1,5): rele(x,1)
+        if request.find('/r5off') == 6:
+            for x in range(1,5): rele(x,0)
+        response = web_page()
+        conn.send('HTTP/1.1 200 OK\n')
+        conn.send('Content-Type: text/html\n')
+        conn.send('Connection: close\n\n')
+        conn.sendall(response)
+        conn.close()
+    except OSError:
+        a=1
+
