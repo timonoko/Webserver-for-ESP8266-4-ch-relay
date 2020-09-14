@@ -6,10 +6,6 @@ try:
 except:
   import socket
 
-from machine import Pin
-  
-led = Pin(2, Pin.OUT)
-
 import network
 
 import time
@@ -19,20 +15,24 @@ releet = [0,0,0,0,0]
 from machine import UART
 uart = UART(0, 115200)
 uart.init(115200, bits=8, parity=None, stop=1, timeout=1000)
-uart.write(b'Uart toimii 4 ')
+uart.write(b'Uart toimii 5')
 
-def rele(r,o):
+#def rele(r,o): # dammit
+#    releet[r]=o
+#    n=10*r+o
+#    if n==10: s=b'\xA0\x01\x00\xA1'
+#    if n==11: s=b'\xA0\x01\x01\xA2'
+#    if n==20: s=b'\xA0\x02\x00\xA2'
+#    if n==21: s=b'\xA0\x02\x01\xA3'
+#    if n==30: s=b'\xA0\x03\x00\xA3'
+#    if n==31: s=b'\xA0\x03\x01\xA4'
+#    if n==40: s=b'\xA0\x04\x00\xA4'
+#    if n==41: s=b'\xA0\x04\x01\xA5'
+#    uart.write(s) 
+
+def rele(r,o): # I finally made it
     releet[r]=o
-    n=10*r+o
-    if n==10: s=b'\xA0\x01\x00\xA1'
-    if n==11: s=b'\xA0\x01\x01\xA2'
-    if n==20: s=b'\xA0\x02\x00\xA2'
-    if n==21: s=b'\xA0\x02\x01\xA3'
-    if n==30: s=b'\xA0\x03\x00\xA3'
-    if n==31: s=b'\xA0\x03\x01\xA4'
-    if n==40: s=b'\xA0\x04\x00\xA4'
-    if n==41: s=b'\xA0\x04\x01\xA5'
-    uart.write(s)
+    uart.write(b'%c%c%c%c'%(0xA0,r,o,0xA0+o+r))
     
 def web_page():
   html = """
