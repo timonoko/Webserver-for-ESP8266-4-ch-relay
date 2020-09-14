@@ -21,6 +21,7 @@ uart.write(b'Uart works  #6')
 def rele(r,o): # I finally made it
     releet[r]=o
     uart.write(b'%c%c%c%c'%(0xA0,r,o,0xA0+o+r))
+    time.sleep(0.2)
     
 def web_page():
   html = """
@@ -47,7 +48,9 @@ def web_page():
     <p><strong>""" + str(releet[4]) + """</strong>
         <a href="/r4on"> <button class="button">ON</button></a>
         <a href="/r4off"> <button class="button button2">OFF</button></a></p>
-    <p> <a href="/exit"> <button class="button">EXIT</button></a></p>
+    <p><strong>*</strong>
+        <a href="/raon"> <button class="button">ON</button></a>
+        <a href="/raoff"> <button class="button button2">OFF</button></a></p>
      </body>
    </html>"""
   return html
@@ -61,13 +64,12 @@ while True:
   request = conn.recv(1024)
   request = str(request)
   for r in range(1,5):
-    if request.find('/r'+str(r)+'on') == 6:
-       rele(r,1)
-    if request.find('/r'+str(r)+'off') == 6:
-       rele(r,0)
-  if request.find('/exit') == 6:
-      import webrepl
-      webrepl.start()
+    if request.find('/r'+str(r)+'on') == 6: rele(r,1)
+    if request.find('/r'+str(r)+'off') == 6: rele(r,0)
+  if request.find('/raon') == 6:
+      for x in range(1,5): rele(x,1)
+  if request.find('/raoff') == 6:
+      for x in range(1,5): rele(x,0)
   response = web_page()
   conn.send('HTTP/1.1 200 OK\n')
   conn.send('Content-Type: text/html\n')
