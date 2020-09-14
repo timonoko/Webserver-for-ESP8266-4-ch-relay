@@ -49,8 +49,7 @@ def web_page():
 from machine import Pin
 
 BUTTON=Pin(2, Pin.IN)  
-HI=1
-LO=0
+HI=1; LO=0
 
 def buttoni():
     if BUTTON.value()==LO:
@@ -62,33 +61,27 @@ def buttoni():
                 time.sleep(0.010)
                 loc=loc+1
                 hic=0
-            if loc > 100:
-                nummer=5
+            if loc > 100: nummer=5
             elif loc > 3:
                 loc=0
                 nummer=nummer+1
             time.sleep(0.010)
             hic=hic+1 
-        print('BUTTON BOUNC %i %i'%(nummer,loc))
         if 4<nummer:
-            rele(1,0)
-            rele(2,0)
-            rele(3,0)
-            rele(4,0)
-        elif 0<nummer:
-            rele(nummer,1)
+            for x in range(1,5): rele(x,0)
+        elif 0<nummer: rele(nummer,1)
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.bind(('', 80))
 s.listen(5)
 
 while True:
-    buttoni()
     s.settimeout(0.2)
     try:
         conn, addr = s.accept()
         request = conn.recv(1024)
         request = str(request)
+        s.settimeout(5.0)
         for r in range(1,5):
             if request.find('/r'+str(r)+'on') == 6: rele(r,1)
             if request.find('/r'+str(r)+'off') == 6: rele(r,0)
@@ -103,5 +96,5 @@ while True:
         conn.sendall(response)
         conn.close()
     except OSError:
-        a=1
+        buttoni() 
 
