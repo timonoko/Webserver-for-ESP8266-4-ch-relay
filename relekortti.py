@@ -27,7 +27,7 @@ def web_page():
   menu=''
   for x in range(1,6):
      menu=menu+"""
-    <p> """ +str(releet[x])+ """ <a href="/r%ion"> <button class="button">ON</button></a>
+    <p> """ +str(x)+":"+str(releet[x])+ """ <a href="/r%ion"> <button class="button">ON</button></a>
      <a href="/r%ioff"> <button class="button button2">OFF</button></a></p>
     """%(x,x)
   html = """
