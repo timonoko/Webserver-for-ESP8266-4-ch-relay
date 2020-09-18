@@ -4,7 +4,7 @@ It has has to be in "mode 1", with red Led on.  The built-in software works but 
 
 Added now a push-button to top of the main unit. You can morse 1-4 to turn a relay on. Long press = all off.
 
-Made preliminary Python version now. No unscrewing needed. I can update the programming via de Interwebs.
+Made exactly the same functionality with Micropython. I can now update the programming via de Interwebs.
 
 <img src=kuva.png>
 
