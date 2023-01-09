@@ -15,6 +15,10 @@ uart.write(b'Uart works  #6')
 
 releet=['-',0,0,0,0,'*']
 
+"""    
+
+"""
+
 def rele(r,o): 
     releet[r]=o
     uart.write(b'%c%c%c%c'%(0xA0,r,o,0xA0+o+r))
@@ -24,25 +28,27 @@ for x in range(1,5): rele(x,0)
 
 def web_page():
   menu=''
-  for x in range(1,6):
-     menu=menu+"""
-    <p> """ +str(x)+":"+str(releet[x])+ """ <a href="/r%ion"> <button class="button">ON</button></a>
-     <a href="/r%ioff"> <button class="button button2">OFF</button></a></p>
-    """%(x,x)
+  for x in range(1,5):
+      if releet[x]==1:
+          menu+="""<a href="/r%ioff"><button class="button">%i</button> </a>"""%(x,x) 
+      else:
+          menu+="""<a href="/r%ion"><button class="button button3">%i</button> </a>"""%(x,x) 
+  menu+="""<a href="/r5off"><button class="button button3">*</button> </a>""" 
   html = """
      <html><head> 
-     <title>ESP Relay Web Server</title>
-     <meta name="viewport" content="width=device-width, initial-scale=1">
+     <title>Nelja Reletta</title>
+     <meta name="viewport" content="width=device-width, initial-scale=1"> 
      <link rel="icon" href="data:,">
      <style>html{font-family: Helvetica; display:inline-block; margin: 0px auto; text-align: center;}
-  h1{color: #0F3376; padding: 2vh;}p{font-size: 1.5rem;}.button{display: inline-block; background-color: #e7bd3b; border: none; 
+  h1{color: #0F3376; padding: 2vh;}p{font-size: 1.5rem;}.button{display: inline-block; background-color: #ff0000; border: none; 
   border-radius: 4px; color: white; padding: 16px 40px; text-decoration: none; font-size: 30px; margin: 2px; cursor: pointer;}
-  .button2{background-color: #4286f4;}</style>
+  .button2{background-color: #4a798a;}
+  .button3{background-color: #3f7749;}</style>
      </head>
       <body>
      <h1>RELEET</h1> 
      """ + menu + """
-     </body>
+      </body>
    </html>"""
   return html
 
